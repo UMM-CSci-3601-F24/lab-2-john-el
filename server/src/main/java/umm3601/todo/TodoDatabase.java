@@ -56,6 +56,8 @@ public class TodoDatabase {
     return Arrays.stream(allTodos).filter(x -> x._id.equals(id)).findFirst().orElse(null);
   }
 
+
+
   /**
    * Get an array of all the users satisfying the queries in the params.
    *age
@@ -84,6 +86,10 @@ public class TodoDatabase {
     if(queryParams.containsKey("status")){
       boolean targetStatus = queryParams.get("status").equals("complete");
       filteredTodos = filterTodosByStatus(targetStatus);
+    }
+    if (queryParams.containsKey("body")) {
+      String targetBody = queryParams.get("body").get(0);
+        filteredTodos = filterTodosByBody(targetBody);
     }
     // Process other query parameters here... get todos
     return filteredTodos;
@@ -118,4 +124,7 @@ public class TodoDatabase {
     return Arrays.stream(allTodos).filter(x -> x.owner.equals(targetOwner)).toArray(Todo[]::new);
   }
 
+  public Todo[] filterTodosByBody(String targetBody){
+    return Arrays.stream(allTodos).filter(x -> x.body.contains(targetBody)).toArray(Todo[]::new);
+  }
 }

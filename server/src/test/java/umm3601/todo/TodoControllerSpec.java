@@ -2,6 +2,7 @@ package umm3601.todo;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -81,11 +82,11 @@ public class TodoControllerSpec {
     queryParams.put("status", Arrays.asList(new String[] {"true"})); //risky gamble here converting bool to string
     when(ctx.queryParamMap()).thenReturn(queryParams);
 
-    todoController.getTodosByStatus(ctx);
+    todoController.getTodos(ctx);
 
     verify(ctx).json(todoArrayCaptor.capture());
     for (Todo todo : todoArrayCaptor.getValue()) {
-      assertEquals("true", todo.status);
+      assertEquals(true, todo.status);
     }
   }
 
@@ -95,11 +96,11 @@ public class TodoControllerSpec {
     queryParams.put("status", Arrays.asList(new String[] {"false"})); //risky gamble here converting bool to string
     when(ctx.queryParamMap()).thenReturn(queryParams);
 
-    todoController.getTodosByStatus(ctx);
+    todoController.getTodos(ctx);
 
     verify(ctx).json(todoArrayCaptor.capture());
     for (Todo todo : todoArrayCaptor.getValue()) {
-      assertEquals("false", todo.status);
+      assertEquals(false, todo.status);
     }
   }
 
@@ -111,7 +112,7 @@ public class TodoControllerSpec {
     queryParams.put("owner", Arrays.asList(new String[] {"Blanche"}));
     when(ctx.queryParamMap()).thenReturn(queryParams);
 
-    todoController.filterTodosByOwner(ctx);
+    todoController.getTodos(ctx);
 
     verify(ctx).json(todoArrayCaptor.capture());
     for (Todo todo : todoArrayCaptor.getValue()) {
@@ -123,7 +124,7 @@ public class TodoControllerSpec {
   public void respondsAppropriatelyToRequestForNonexistentOwner() throws IOException {
     when(ctx.pathParam("owner")).thenReturn(null);
     Throwable exception = Assertions.assertThrows(NotFoundResponse.class, () -> {
-      todoController.filterTodosByOwner(ctx);
+      todoController.getTodos(ctx);
     });
     assertEquals("No todo with owner " + null + " was found.", exception.getMessage());
   }
@@ -140,6 +141,18 @@ public class TodoControllerSpec {
     todoController.getTodosByID(ctx);
     verify(ctx).json(todo);
     verify(ctx).status(HttpStatus.OK);
+  }
+
+  @Test
+  public void canGetTodosByBody() throws IOException {
+    Map<String, List<String>> queryParams = new HashMap<>();
+    queryParams.put("body", Arrays.asList(new String[] {"qui"}));
+    when(ctx.queryParamMap()).thenReturn(queryParams);
+    todoController.getTodos(ctx);
+    verify(ctx).json(todoArrayCaptor.capture());
+    for (Todo todo : todoArrayCaptor.getValue()) {
+      assertTrue(todo.body.contains("qui"), "Body <" + todo.body + "> didn't contain 'qui'.");
+    }
   }
 
   @Test
