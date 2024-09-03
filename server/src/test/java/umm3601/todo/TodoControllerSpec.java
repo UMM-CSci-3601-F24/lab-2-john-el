@@ -38,12 +38,12 @@ public class TodoControllerSpec {
   private ArgumentCaptor<Todo[]> todoArrayCaptor;
 
 
-  // @BeforeEach
-  // public void setUp() throws IOException {
-  //   MockitoAnnotations.openMocks(this);
-  //   db = new TodoDatabase(Main.TODO_DATA_FILE);
-  //   todoController = new TodoController(db);
-  // }
+  @BeforeEach
+  public void setUp() throws IOException {
+    MockitoAnnotations.openMocks(this);
+    db = new TodoDatabase(Main.TODO_DATA_FILE);
+    todoController = new TodoController(db);
+  }
 
 
   @Test
@@ -86,13 +86,13 @@ public class TodoControllerSpec {
   @Test
   public void canGetTodosByID() throws IOException {
     // A specific user ID known to be in the "database".
-    String id = "588935f5c668650dc77df581";
+    String id = "58895985a22c04e761776d54";
     // Get the user associated with that ID.
     Todo todo = db.getTodosByID(id);
 
     when(ctx.pathParam("id")).thenReturn(id);
 
-    todoController.getTodos(ctx);
+    todoController.getTodosByID(ctx);
     verify(ctx).json(todo);
     verify(ctx).status(HttpStatus.OK);
   }
