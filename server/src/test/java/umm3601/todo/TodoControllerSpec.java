@@ -6,10 +6,10 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+// import java.util.Arrays;
+// import java.util.HashMap;
+// import java.util.List;
+// import java.util.Map;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,12 +21,12 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import io.javalin.Javalin;
-import io.javalin.http.BadRequestResponse;
+//import io.javalin.http.BadRequestResponse;
 import io.javalin.http.Context;
 import io.javalin.http.HttpStatus;
-import io.javalin.http.NotFoundResponse;
+//import io.javalin.http.NotFoundResponse;
 import umm3601.Main;
-import umm3601.user.UserDatabase;
+//import umm3601.user.UserDatabase;
 
 @SuppressWarnings({"MagicNumber"})
 public class TodoControllerSpec {
@@ -38,28 +38,28 @@ public class TodoControllerSpec {
   private ArgumentCaptor<Todo[]> todoArrayCaptor;
 
 
-  // @BeforeEach
-  // public void setUp() throws IOException {
-  //   MockitoAnnotations.openMocks(this);
-  //   db = new TodoDatabase(Main.TODO_DATA_FILE);
-  //   todoController = new TodoController(db);
-  // }
+  @BeforeEach
+  public void setUp() throws IOException {
+    MockitoAnnotations.openMocks(this);
+    db = new TodoDatabase(Main.TODO_DATA_FILE);
+    todoController = new TodoController(db);
+  }
 
 
   @Test
-  public void canBuildController() throws IOException{
+  public void canBuildController() throws IOException {
     TodoController controller = TodoController.buildTodoController(Main.TODO_DATA_FILE);
     Javalin mockServer = Mockito.mock(Javalin.class);
     controller.addRoutes(mockServer);
     verify(mockServer, Mockito.atLeast(2)).get(any(), any());
   }
 
-  // @Test
-  // public void buildControllerFailsWithIllegalDbFile(){
-  //   Assertions.assertThrows(IOException.class, () -> {
-  //     TodoController.buildTodoController("this is not a legal file name");
-  //   });
-  // }
+  @Test
+  public void buildControllerFailsWithIllegalDbFile() {
+    Assertions.assertThrows(IOException.class, () -> {
+      TodoController.buildTodoController("this is not a legal file name");
+    });
+  }
 
   @Test
   public void canGetAllTodos() throws IOException {

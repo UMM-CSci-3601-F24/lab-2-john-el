@@ -85,7 +85,7 @@ public class TodoDatabase {
       filteredTodos = filterTodosByCategory(filteredTodos, targetCategory);
     }
     //filter status if defined
-    if(queryParams.containsKey("status")){
+    if (queryParams.containsKey("status")) {
       boolean targetStatus = Boolean.valueOf(queryParams.get("status").get(0));
       filteredTodos = filterTodosByStatus(filteredTodos, targetStatus);
     }
@@ -101,8 +101,8 @@ public class TodoDatabase {
    * @return an array of all the todos from the given list that have the target
    *         status
    */
-    public Todo[] filterTodosByStatus(Todo[] Todos, boolean targetStatus) {
-      return Arrays.stream(Todos).filter(x -> x.status == targetStatus).toArray(Todo[]::new);
+    public Todo[] filterTodosByStatus(Todo[] todos, boolean targetStatus) {
+      return Arrays.stream(todos).filter(x -> x.status == targetStatus).toArray(Todo[]::new);
     }
 
   /**
@@ -113,13 +113,13 @@ public class TodoDatabase {
    * @return an array of all the users from the given list that have the target
    *         company
    */
-  public Todo[] filterTodosByCategory(Todo[] Todos, String targetCategory) {
-    return Arrays.stream(Todos).filter(x -> x.category.equals(targetCategory)).toArray(Todo[]::new);
+  public Todo[] filterTodosByCategory(Todo[] todos, String targetCategory) {
+    return Arrays.stream(todos).filter(x -> x.category.equals(targetCategory)).toArray(Todo[]::new);
   }
 
   // filter by owner
-  public Todo[] filterTodosByOwner(Todo[] Todos, String targetOwner){
-    return Arrays.stream(Todos).filter(x -> x.owner.equals(targetOwner)).toArray(Todo[]::new);
+  public Todo[] filterTodosByOwner(Todo[] todos, String targetOwner) {
+    return Arrays.stream(todos).filter(x -> x.owner.equals(targetOwner)).toArray(Todo[]::new);
   }
 
 }
