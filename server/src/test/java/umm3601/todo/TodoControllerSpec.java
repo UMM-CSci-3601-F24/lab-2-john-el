@@ -96,15 +96,6 @@ public class TodoControllerSpec {
     }
   }
 
-  // @Test
-  // public void respondsAppropriatelyToRequestForNonexistentOwner() throws IOException {
-  //   when(ctx.pathParam("owner")).thenReturn(null);
-  //   Throwable exception = Assertions.assertThrows(NotFoundResponse.class, () -> {
-  //     todoController.getTodos(ctx);
-  //   });
-  //   assertEquals("No todo with owner " + null + " was found.", exception.getMessage());
-  // }
-
   @Test //based off canGetUsersWithSpecifiedID
   public void canGetTodosByID() throws IOException {
     // A specific user ID known to be in the "database".
