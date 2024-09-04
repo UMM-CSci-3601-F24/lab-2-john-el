@@ -81,7 +81,7 @@ public class TodoDatabase {
       filteredTodos = filterTodosByCategory(targetCategory);
     }
     //filter status if defined
-    if(queryParams.containsKey("status")){
+    if (queryParams.containsKey("status")) {
       boolean targetStatus = queryParams.get("status").get(0).equals("complete");
       filteredTodos = filterTodosByStatus(targetStatus);
     }
