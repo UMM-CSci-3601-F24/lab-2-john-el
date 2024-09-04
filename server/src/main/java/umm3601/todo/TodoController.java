@@ -25,7 +25,7 @@ public class TodoController implements Controller {
     return todoController;
   }
 
-  public void getTodosByID(Context ctx) {
+  public void getTodo(Context ctx) {
     String id = ctx.pathParam("id");
     Todo todos = todoDatabase.getTodosByID(id);
     if (todos != null) {
@@ -75,7 +75,7 @@ public class TodoController implements Controller {
 
 @Override
   public void addRoutes(Javalin server) {
-    server.get("api/todos/{id}", this::getTodosByID);
+    server.get("api/todos/{id}", this::getTodo);
     server.get("/api/todos", this::getTodos);
     //server.get("/api/todos?owner=Blanche", this::filterTodosByOwner);
     //server.get("/api/todos?status=complete", this::getTodosByStatus);
