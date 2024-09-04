@@ -88,7 +88,6 @@ public class TodoControllerSpec {
       assertEquals("true", todo.status);
     }
   }
-
   @Test
    public void canGetTodosByStatusFalse() throws IOException {
     Map<String, List<String>> queryParams = new HashMap<>();
@@ -101,6 +100,16 @@ public class TodoControllerSpec {
     for (Todo todo : todoArrayCaptor.getValue()) {
       assertEquals("false", todo.status);
     }
+  }
+  @Test
+  public void respondsAppropriatelyToRequestBadStatus() throws IOException {
+    Map<String, List<String>> queryParams = new HashMap<>();
+    queryParams.put("status", Arrays.asList(new String[] {"gibberish"}));
+    when(ctx.queryParamMap()).thenReturn(queryParams);
+    Throwable exception = Assertions.assertThrows(BadRequestResponse.class, () -> {
+      todoController.getTodosByStatus(ctx);
+    });
+    assertEquals("bad status entered. recieved: null", exception.getMessage());
   }
 
   // can get todo by owner
@@ -152,6 +161,19 @@ public class TodoControllerSpec {
   }
 
   @Test
+  //test for partially entered/bad Limit
+  public void respondsAppropriatelyToRequestForBadLimit() throws IOException {
+    // Map<String, List<String>> queryParams = new HashMap<>();
+    // queryParams.put("limit", Arrays.asList(new String[] {"100000"}));
+    when(ctx.pathParam("limit")).thenReturn(null);
+    Throwable exception = Assertions.assertThrows(NotFoundResponse.class, () -> {
+      todoController.getTodos(ctx);
+    });
+    assertEquals("invalid entry for limit, given : null", exception.getMessage());
+  }
+
+  @Test
+  //tests that if a value is entered that is higher than the amount in the json that it returns the amount in the json
   public void canGetTodosWithLimitAbove() throws IOException {
     Map<String, List<String>> queryParams = new HashMap<>();
     queryParams.put("limit", Arrays.asList(new String[] {"100000"}));
