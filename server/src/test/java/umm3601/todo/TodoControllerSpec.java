@@ -10,6 +10,10 @@ import java.io.IOException;
 // import java.util.HashMap;
 // import java.util.List;
 // import java.util.Map;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,6 +28,7 @@ import io.javalin.Javalin;
 //import io.javalin.http.BadRequestResponse;
 import io.javalin.http.Context;
 import io.javalin.http.HttpStatus;
+import io.javalin.http.NotFoundResponse;
 //import io.javalin.http.NotFoundResponse;
 import umm3601.Main;
 //import umm3601.user.UserDatabase;
@@ -68,33 +73,65 @@ public class TodoControllerSpec {
     assertEquals(db.size(), todoArrayCaptor.getValue().length);
   }
 
-  //this will have issues with the age
-  // @Test
-  // public void canGetTodosWithAge25() throws IOException {
-  //   Map<String, List<String>> queryParams = new HashMap<>();
-  //   queryParams.put("age",Arrays.asList(new String[] {"25"})); //age will cause issues
-  //   when(ctx.queryParamMap()).thenReturn(queryParams);
-  //   todoController.getUsers(ctx); //this will cause issues
-  //   verify(ctx).json(todoArrayCaptor.capture());
-  //   for(Todo todo : todoArrayCaptor.getValue()) {
-  //     assertEquals(25, todo.age); //will cause issues
-  //   }
-  //   assertEquals(2, todoArrayCaptor.getValue().length);
-  // }
+  @Test
+  public void canGetTodo() throws IOException {
+    String id = "58895985a22c04e761776d54";
+    Todo todo = db.getTodosByID(id);
 
+    when(ctx.pathParam("id")).thenReturn(id);
+    todoController.getTodosByID(ctx);
+
+    assertEquals("Blanche", todo.toString());
+  }
 
   @Test
   public void canGetTodosByID() throws IOException {
     // A specific user ID known to be in the "database".
-    String id = "588935f5c668650dc77df581";
+    String id = "5889598555fbbad472586a56";
     // Get the user associated with that ID.
     Todo todo = db.getTodosByID(id);
 
     when(ctx.pathParam("id")).thenReturn(id);
 
-    todoController.getTodos(ctx);
+    todoController.getTodosByID(ctx);
     verify(ctx).json(todo);
     verify(ctx).status(HttpStatus.OK);
   }
 
+  @Test
+  public void respondsAppropriatelyToRequestForNonexistentId() throws IOException {
+    when(ctx.pathParam("id")).thenReturn(null);
+    Throwable exception = Assertions.assertThrows(NotFoundResponse.class, () -> {
+      todoController.getTodosByID(ctx);
+    });
+    assertEquals("No todo with id " + null + " was found.", exception.getMessage());
+  }
+
+
+  //TESTS FOR OWNER
+  @Test
+  public void canFilterTodosByOwner() throws IOException {
+    Map<String, List<String>> queryParams = new HashMap<>();
+    queryParams.put("owner", Arrays.asList(new String[] {"Blanche"}));
+    when(ctx.queryParamMap()).thenReturn(queryParams);
+
+    todoController.filterTodosByOwner(ctx);
+
+    verify(ctx).json(todoArrayCaptor.capture());
+    for (Todo todo : todoArrayCaptor.getValue()) {
+      assertEquals("Blanche", todo.owner);
+    }
+  }
+
+  @Test
+  public void respondsAppropriatelyToRequestForNonexistentOwner() throws IOException {
+    Map<String, List<String>> queryParams = new HashMap<>();
+    queryParams.put("owner", Arrays.asList(new String[] {"Bubba"}));
+    when(ctx.queryParamMap()).thenReturn(queryParams);
+
+    Throwable exception = Assertions.assertThrows(NotFoundResponse.class, () -> {
+      todoController.filterTodosByOwner(ctx);
+    });
+    assertEquals("No todo with owner " + "Bubba" + " was found.", exception.getMessage());
+  }
 }

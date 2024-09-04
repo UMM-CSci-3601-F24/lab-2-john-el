@@ -36,9 +36,20 @@ public class TodoController implements Controller {
     }
   }
 
-public void getTodos(Context ctx) {
+  public void getTodos(Context ctx) {
     Todo[] todos = todoDatabase.listTodos(ctx.queryParamMap());
     ctx.json(todos);
+  }
+
+  public void filterTodosByOwner(Context ctx) {
+    String owner = ctx.queryParamMap().get("owner").get(0);
+      Todo[] todos = todoDatabase.filterTodosByOwner(owner);
+      if (todos.length != 0) {
+        ctx.json(todos);
+        ctx.status(HttpStatus.OK);
+      } else {
+        throw new NotFoundResponse("No todo with owner " + owner + " was found.");
+      }
   }
 
 @Override
