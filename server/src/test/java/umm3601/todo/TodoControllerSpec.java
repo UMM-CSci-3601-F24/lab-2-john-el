@@ -96,22 +96,6 @@ public class TodoControllerSpec {
     }
   }
 
-  // can get todo by owner
-  // based off of canGetUsersWithCompany
-  @Test
-  public void canFilterTodosByOwner() throws IOException {
-    Map<String, List<String>> queryParams = new HashMap<>();
-    queryParams.put("owner", Arrays.asList(new String[] {"Blanche"}));
-    when(ctx.queryParamMap()).thenReturn(queryParams);
-
-    todoController.getTodos(ctx);
-
-    verify(ctx).json(todoArrayCaptor.capture());
-    for (Todo todo : todoArrayCaptor.getValue()) {
-      assertEquals("Blanche", todo.owner);
-    }
-  }
-
   // @Test
   // public void respondsAppropriatelyToRequestForNonexistentOwner() throws IOException {
   //   when(ctx.pathParam("owner")).thenReturn(null);

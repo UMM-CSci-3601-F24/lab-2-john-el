@@ -83,7 +83,7 @@ public class TodoDatabase {
       filteredTodos = filterTodosByCategory(targetCategory);
     }
     //filter status if defined
-      
+
     if (queryParams.containsKey("status")) {
       boolean targetStatus = queryParams.get("status").equals("complete");
       // boolean targetStatus = Boolean.valueOf(queryParams.get("status").get(0)); //if what is abocve causes errors
