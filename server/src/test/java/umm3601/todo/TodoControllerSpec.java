@@ -22,12 +22,12 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import io.javalin.Javalin;
-import io.javalin.http.BadRequestResponse;
+//import io.javalin.http.BadRequestResponse;
 import io.javalin.http.Context;
 import io.javalin.http.HttpStatus;
 import io.javalin.http.NotFoundResponse;
 import umm3601.Main;
-import umm3601.user.UserDatabase;
+//import umm3601.user.UserDatabase;
 
 @SuppressWarnings({"MagicNumber"})
 public class TodoControllerSpec {
@@ -121,13 +121,17 @@ public class TodoControllerSpec {
 
   @Test
   public void respondsAppropriatelyToRequestForNonexistentOwner() throws IOException {
-    when(ctx.pathParam("owner")).thenReturn(null);
+    Map<String, List<String>> queryParams = new HashMap<>();
+    queryParams.put("owner", Arrays.asList(new String[] {"Bubba"}));
+    when(ctx.queryParamMap()).thenReturn(queryParams);
+
     Throwable exception = Assertions.assertThrows(NotFoundResponse.class, () -> {
       todoController.filterTodosByOwner(ctx);
     });
-    assertEquals("No todo with owner " + null + " was found.", exception.getMessage());
+    assertEquals("No todo with owner " + "Bubba" + " was found.", exception.getMessage());
   }
 
+  //ID TESTS
   @Test //based off canGetUsersWithSpecifiedID
   public void canGetTodosByID() throws IOException {
     // A specific user ID known to be in the "database".
@@ -141,7 +145,6 @@ public class TodoControllerSpec {
     verify(ctx).json(todo);
     verify(ctx).status(HttpStatus.OK);
   }
-
   @Test
   public void respondsAppropriatelyToRequestForNonexistentId() throws IOException {
     when(ctx.pathParam("id")).thenReturn(null);
@@ -149,6 +152,19 @@ public class TodoControllerSpec {
       todoController.getTodosByID(ctx);
     });
     assertEquals("No todo with id " + null + " was found.", exception.getMessage());
+  }
+
+  //LIMIT TESTS
+  @Test
+  public void respondsAppropriatelyToRequestForBadLimit() throws IOException {
+    Map<String, List<String>> queryParams = new HashMap<>();
+    queryParams.put("limit", Arrays.asList(new String[] {"!@"}));
+    when(ctx.queryParamMap()).thenReturn(queryParams);
+
+    Throwable exception = Assertions.assertThrows(NotFoundResponse.class, () -> {
+      TodoDatabase.listTodos(queryParams);
+    });
+    assertEquals("No todo with owner " + "!@" + " was found.", exception.getMessage());
   }
 
   @Test

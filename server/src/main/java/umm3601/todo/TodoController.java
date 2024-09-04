@@ -73,6 +73,11 @@ public void filterTodosByOwner(Context ctx) {
     }
 }
 
+public void filterTodosWithLimit(Context ctx) {
+  int limit = ctx.pathParam("limit");
+  Todo[] todos = todoDatabase.fil
+}
+
 @Override
   public void addRoutes(Javalin server) {
     server.get("api/todos/{id}",this::getTodosByID);
