@@ -81,10 +81,16 @@ public class TodoDatabase {
       filteredTodos = filterTodosByCategory(targetCategory);
     }
     //filter status if defined
-    if(queryParams.containsKey("status")){
+    if (queryParams.containsKey("status")) {
       boolean targetStatus = queryParams.get("status").equals("complete");
       filteredTodos = filterTodosByStatus(targetStatus);
     }
+    // filter if limit is defined
+    if (queryParams.containsKey("limit")) {
+      int limit = Integer.valueOf(queryParams.get("limit").get(0));
+      filteredTodos = filterTodosWithLimit(limit);
+    }
+
     // Process other query parameters here... get todos
     return filteredTodos;
   }
@@ -114,8 +120,16 @@ public class TodoDatabase {
   }
 
   // filter by owner
-  public Todo[] filterTodosByOwner(String targetOwner){
+  public Todo[] filterTodosByOwner(String targetOwner) {
     return Arrays.stream(allTodos).filter(x -> x.owner.equals(targetOwner)).toArray(Todo[]::new);
   }
 
+  public Todo[] filterTodosWithLimit(int limit) {
+    limit = Math.min(allTodos.length, limit);
+    Todo[] temp = new Todo[limit];
+      for (int i = 0; i < limit; i++) {
+        temp[i] = allTodos[i];
+      }
+    return temp;
+  }
 }
