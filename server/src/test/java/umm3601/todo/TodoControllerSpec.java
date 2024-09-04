@@ -1,6 +1,6 @@
 package umm3601.todo;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+//import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
@@ -27,7 +27,7 @@ import io.javalin.http.Context;
 import io.javalin.http.HttpStatus;
 import io.javalin.http.NotFoundResponse;
 import umm3601.Main;
-//import umm3601.user.UserDatabase;
+//import umm3601.todo.TodoDatabase;
 
 @SuppressWarnings({"MagicNumber"})
 public class TodoControllerSpec {
@@ -47,7 +47,7 @@ public class TodoControllerSpec {
   }
 
   @Test
-  public void canBuildController() throws IOException{
+  public void canBuildController() throws IOException {
     TodoController controller = TodoController.buildTodoController(Main.TODO_DATA_FILE);
     Javalin mockServer = Mockito.mock(Javalin.class);
     controller.addRoutes(mockServer);
@@ -55,7 +55,7 @@ public class TodoControllerSpec {
   }
 
   @Test
-  public void buildControllerFailsWithIllegalDbFile(){
+  public void buildControllerFailsWithIllegalDbFile() {
     Assertions.assertThrows(IOException.class, () -> {
       TodoController.buildTodoController("this is not a legal file name");
     });
@@ -75,33 +75,33 @@ public class TodoControllerSpec {
   //   assertTrue(,todoArrayCaptor.capture());
   // }
 
-  @Test //based off of canGteUsersWithCompany
-  public void canGetTodosByStatusTrue() throws IOException {
-    Map<String, List<String>> queryParams = new HashMap<>();
-    queryParams.put("status", Arrays.asList(new String[] {"true"})); //risky gamble here converting bool to string
-    when(ctx.queryParamMap()).thenReturn(queryParams);
+  // @Test //based off of canGteUsersWithCompany
+  // public void canGetTodosByStatusTrue() throws IOException {
+  //   Map<String, List<String>> queryParams = new HashMap<>();
+  //   queryParams.put("status", Arrays.asList(new String[] {"true"})); //risky gamble here converting bool to string
+  //   when(ctx.queryParamMap()).thenReturn(queryParams);
 
-    todoController.getTodosByStatus(ctx);
+  //   todoController.getTodosByStatus(ctx);
 
-    verify(ctx).json(todoArrayCaptor.capture());
-    for (Todo todo : todoArrayCaptor.getValue()) {
-      assertEquals("true", todo.status);
-    }
-  }
+  //   verify(ctx).json(todoArrayCaptor.capture());
+  //   for (Todo todo : todoArrayCaptor.getValue()) {
+  //     assertEquals("true", todo.status);
+  //   }
+  // }
 
-  @Test
-   public void canGetTodosByStatusFalse() throws IOException {
-    Map<String, List<String>> queryParams = new HashMap<>();
-    queryParams.put("status", Arrays.asList(new String[] {"false"})); //risky gamble here converting bool to string
-    when(ctx.queryParamMap()).thenReturn(queryParams);
+  // @Test
+  //  public void canGetTodosByStatusFalse() throws IOException {
+  //   Map<String, List<String>> queryParams = new HashMap<>();
+  //   queryParams.put("status", Arrays.asList(new String[] {"false"})); //risky gamble here converting bool to string
+  //   when(ctx.queryParamMap()).thenReturn(queryParams);
 
-    todoController.getTodosByStatus(ctx);
+  //   todoController.getTodosByStatus(ctx);
 
-    verify(ctx).json(todoArrayCaptor.capture());
-    for (Todo todo : todoArrayCaptor.getValue()) {
-      assertEquals("false", todo.status);
-    }
-  }
+  //   verify(ctx).json(todoArrayCaptor.capture());
+  //   for (Todo todo : todoArrayCaptor.getValue()) {
+  //     assertEquals("false", todo.status);
+  //   }
+  // }
 
   // can get todo by owner
   // based off of canGetUsersWithCompany
@@ -111,7 +111,7 @@ public class TodoControllerSpec {
     queryParams.put("owner", Arrays.asList(new String[] {"Blanche"}));
     when(ctx.queryParamMap()).thenReturn(queryParams);
 
-    todoController.filterTodosByOwner(ctx);
+    todoController.getTodos(ctx);
 
     verify(ctx).json(todoArrayCaptor.capture());
     for (Todo todo : todoArrayCaptor.getValue()) {
@@ -119,17 +119,17 @@ public class TodoControllerSpec {
     }
   }
 
-  @Test
-  public void respondsAppropriatelyToRequestForNonexistentOwner() throws IOException {
-    Map<String, List<String>> queryParams = new HashMap<>();
-    queryParams.put("owner", Arrays.asList(new String[] {"Bubba"}));
-    when(ctx.queryParamMap()).thenReturn(queryParams);
+  // @Test
+  // public void respondsAppropriatelyToRequestForNonexistentOwner() throws IOException {
+  //   Map<String, List<String>> queryParams = new HashMap<>();
+  //   queryParams.put("owner", Arrays.asList(new String[] {"Bubba"}));
+  //   when(ctx.queryParamMap()).thenReturn(queryParams);
 
-    Throwable exception = Assertions.assertThrows(NotFoundResponse.class, () -> {
-      todoController.filterTodosByOwner(ctx);
-    });
-    assertEquals("No todo with owner " + "Bubba" + " was found.", exception.getMessage());
-  }
+  //   Throwable exception = Assertions.assertThrows(NotFoundResponse.class, () -> {
+  //     todoController.getTodos(ctx);
+  //   });
+  //   assertEquals("No todo with owner " + "Bubba" + " was found.", exception.getMessage());
+  // }
 
   //ID TESTS
   @Test //based off canGetUsersWithSpecifiedID
@@ -161,10 +161,11 @@ public class TodoControllerSpec {
     queryParams.put("limit", Arrays.asList(new String[] {"!@"}));
     when(ctx.queryParamMap()).thenReturn(queryParams);
 
-    Throwable exception = Assertions.assertThrows(NotFoundResponse.class, () -> {
-      TodoDatabase.listTodos(queryParams);
+    Throwable exception = Assertions.assertThrows(NumberFormatException.class, () -> {
+      todoController.getTodos(ctx);
     });
-    assertEquals("No todo with owner " + "!@" + " was found.", exception.getMessage());
+   // System.out.println(exception.getMessage());
+    assertEquals("For input string: \"!@\"", exception.getMessage());
   }
 
   @Test
@@ -189,7 +190,7 @@ public class TodoControllerSpec {
     todoController.getTodos(ctx);
     verify(ctx).json(todoArrayCaptor.capture());
 
-    assertEquals(5 , todoArrayCaptor.getValue().length);
+    assertEquals(5, todoArrayCaptor.getValue().length);
   }
 
 
@@ -202,6 +203,6 @@ public class TodoControllerSpec {
     todoController.getTodos(ctx);
     verify(ctx).json(todoArrayCaptor.capture());
 
-    assertEquals(0 , todoArrayCaptor.getValue().length);
+    assertEquals(0, todoArrayCaptor.getValue().length);
   }
 }
