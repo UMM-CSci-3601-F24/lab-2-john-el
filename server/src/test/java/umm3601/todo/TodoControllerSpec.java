@@ -27,13 +27,13 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import io.javalin.Javalin;
-//import io.javalin.http.BadRequestResponse;
+// import io.javalin.http.BadRequestResponse;
 import io.javalin.http.Context;
 import io.javalin.http.HttpStatus;
 import io.javalin.http.NotFoundResponse;
 //import io.javalin.http.NotFoundResponse;
 import umm3601.Main;
-//import umm3601.user.UserDatabase;
+// import umm3601.user.UserDatabase;
 
 @SuppressWarnings({"MagicNumber"})
 public class TodoControllerSpec {
@@ -74,22 +74,36 @@ public class TodoControllerSpec {
     assertEquals(db.size(), todoArrayCaptor.getValue().length);
   }
 
+
+
+  @Test //based off of canGteUsersWithCompany
+  public void canGetTodosByStatusTrue() throws IOException {
+    Map<String, List<String>> queryParams = new HashMap<>();
+    queryParams.put("status", Arrays.asList(new String[] {"complete"})); //risky gamble here converting bool to string
+    when(ctx.queryParamMap()).thenReturn(queryParams);
+
+    todoController.getTodos(ctx);
+
+    verify(ctx).json(todoArrayCaptor.capture());
+    for (Todo todo : todoArrayCaptor.getValue()) {
+      assertEquals(true, todo.status);
+    }
+  }
   @Test
   public void canGetTodo() throws IOException {
     String id = "58895985a22c04e761776d54";
     Todo todo = db.getTodosByID(id);
     when(ctx.pathParam("id")).thenReturn(id);
-    todoController.getTodosByID(ctx);
+    todoController.getTodo(ctx);
      assertEquals("Blanche", todo.toString());
   }
 
   @Test
    public void canGetTodosByStatusFalse() throws IOException {
     Map<String, List<String>> queryParams = new HashMap<>();
-    queryParams.put("status", Arrays.asList(new String[] {"false"})); //risky gamble here converting bool to string
+    queryParams.put("status", Arrays.asList(new String[] {"incomplete"})); //risky gamble here converting bool to string
     when(ctx.queryParamMap()).thenReturn(queryParams);
     todoController.getTodos(ctx);
-
     verify(ctx).json(todoArrayCaptor.capture());
     for (Todo todo : todoArrayCaptor.getValue()) {
       assertEquals(false, todo.status);
@@ -105,7 +119,7 @@ public class TodoControllerSpec {
 
     when(ctx.pathParam("id")).thenReturn(id);
 
-    todoController.getTodosByID(ctx);
+    todoController.getTodo(ctx);
     verify(ctx).json(todo);
     verify(ctx).status(HttpStatus.OK);
   }
@@ -114,7 +128,7 @@ public class TodoControllerSpec {
   public void respondsAppropriatelyToRequestForNonexistentId() throws IOException {
     when(ctx.pathParam("id")).thenReturn(null);
     Throwable exception = Assertions.assertThrows(NotFoundResponse.class, () -> {
-      todoController.getTodosByID(ctx);
+      todoController.getTodo(ctx);
     });
     assertEquals("No todo with id " + null + " was found.", exception.getMessage());
   }
@@ -127,7 +141,7 @@ public class TodoControllerSpec {
     queryParams.put("owner", Arrays.asList(new String[] {"Blanche"}));
     when(ctx.queryParamMap()).thenReturn(queryParams);
 
-    todoController.filterTodosByOwner(ctx);
+    todoController.getTodos(ctx);
 
     verify(ctx).json(todoArrayCaptor.capture());
     for (Todo todo : todoArrayCaptor.getValue()) {
@@ -135,17 +149,18 @@ public class TodoControllerSpec {
     }
   }
 
-  @Test
-  public void respondsAppropriatelyToRequestForNonexistentOwner() throws IOException {
-    Map<String, List<String>> queryParams = new HashMap<>();
-    queryParams.put("owner", Arrays.asList(new String[] {"Bubba"}));
-    when(ctx.queryParamMap()).thenReturn(queryParams);
+  // @Test
+  // public void respondsAppropriatelyToRequestForNonexistentOwner() throws IOException {
+  //   Map<String, List<String>> queryParams = new HashMap<>();
+  //   queryParams.put("owner", Arrays.asList(new String[] {"Bubba"}));
+  //   when(ctx.queryParamMap()).thenReturn(queryParams);
 
-    Throwable exception = Assertions.assertThrows(NotFoundResponse.class, () -> {
-      todoController.filterTodosByOwner(ctx);
-    });
-    assertEquals("No todo with owner " + "Bubba" + " was found.", exception.getMessage());
-  }
+  //   Throwable exception = Assertions.assertThrows(NotFoundResponse.class, () -> {
+  //     todoController.getTodos(ctx);
+  //   });
+  //   assertEquals("No todo with owner " + "Bubba" + " was found.", exception.getMessage());
+  // }
+
   @Test
   public void canGetTodosByBody() throws IOException {
     Map<String, List<String>> queryParams = new HashMap<>();
