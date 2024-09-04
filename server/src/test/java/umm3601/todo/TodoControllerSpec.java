@@ -75,7 +75,7 @@ public class TodoControllerSpec {
   //   assertTrue(,todoArrayCaptor.capture());
   // }
 
-  // @Test //based off of canGteUsersWithCompany
+  // @Test //based off of canGetUsersWithCompany
   // public void canGetTodosByStatusTrue() throws IOException {
   //   Map<String, List<String>> queryParams = new HashMap<>();
   //   queryParams.put("status", Arrays.asList(new String[] {"true"})); //risky gamble here converting bool to string

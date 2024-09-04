@@ -81,8 +81,8 @@ public class TodoDatabase {
       filteredTodos = filterTodosByCategory(targetCategory);
     }
     //filter status if defined
-    if (queryParams.containsKey("status")) {
-      boolean targetStatus = queryParams.get("status").equals("complete");
+    if(queryParams.containsKey("status")){
+      boolean targetStatus = queryParams.get("status").get(0).equals("complete");
       filteredTodos = filterTodosByStatus(targetStatus);
     }
     // filter if limit is defined
@@ -90,7 +90,6 @@ public class TodoDatabase {
       int limit = Integer.valueOf(queryParams.get("limit").get(0));
       filteredTodos = filterTodosWithLimit(limit);
     }
-
     // Process other query parameters here... get todos
     return filteredTodos;
   }
