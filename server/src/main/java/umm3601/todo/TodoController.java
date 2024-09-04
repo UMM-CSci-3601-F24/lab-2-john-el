@@ -10,7 +10,7 @@ import umm3601.Controller;
 // import umm3601.todo.TodoDatabase;
 
 
-public class TodoController implements Controller{
+public class TodoController implements Controller {
   private TodoDatabase todoDatabase;
 
   public TodoController(TodoDatabase todoDatabase) {
@@ -63,7 +63,7 @@ public void getTodos(Context ctx) {
 // }
 
 // public void filterTodosByOwner(Context ctx) {
-// 	String owner = ctx.pathParam("owner");
+//     String owner = ctx.pathParam("owner");
 //     Todo[] todos = todoDatabase.filterTodosByOwner(owner);
 //     if (todos != null) {
 //       ctx.json(todos);
@@ -75,7 +75,7 @@ public void getTodos(Context ctx) {
 
 @Override
   public void addRoutes(Javalin server) {
-    server.get("api/todos/{id}",this::getTodosByID);
+    server.get("api/todos/{id}", this::getTodosByID);
     server.get("/api/todos", this::getTodos);
     //server.get("/api/todos?owner=Blanche", this::filterTodosByOwner);
     //server.get("/api/todos?status=complete", this::getTodosByStatus);
