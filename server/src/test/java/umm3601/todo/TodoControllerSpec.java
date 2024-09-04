@@ -150,4 +150,43 @@ public class TodoControllerSpec {
     });
     assertEquals("No todo with id " + null + " was found.", exception.getMessage());
   }
+
+  @Test
+  public void canGetTodosWithLimitAbove() throws IOException {
+    Map<String, List<String>> queryParams = new HashMap<>();
+    queryParams.put("limit", Arrays.asList(new String[] {"100000"}));
+    when(ctx.queryParamMap()).thenReturn(queryParams);
+
+    todoController.getTodos(ctx);
+    verify(ctx).json(todoArrayCaptor.capture());
+
+    assertEquals(TodoDatabase.size(), todoArrayCaptor.getValue().length)
+    assertEquals(TodoDatabase.allTodos.length, todoArrayCaptor.getValue().length);
+  }
+
+
+  @Test
+  public void canGetTodosWithLimitWithin() throws IOException {
+    Map<String, List<String>> queryParams = new HashMap<>();
+    queryParams.put("limit", Arrays.asList(new String[] {"5"}));
+    when(ctx.queryParamMap()).thenReturn(queryParams);
+
+    todoController.getTodos(ctx);
+    verify(ctx).json(todoArrayCaptor.capture());
+
+    assertEquals(5 , todoArrayCaptor.getValue().length);
+  }
+
+
+  @Test
+  public void canGetTodosWithLimitZero() throws IOException {
+    Map<String, List<String>> queryParams = new HashMap<>();
+    queryParams.put("limit", Arrays.asList(new String[] {"0"}));
+    when(ctx.queryParamMap()).thenReturn(queryParams);
+
+    todoController.getTodos(ctx);
+    verify(ctx).json(todoArrayCaptor.capture());
+
+    assertEquals(0 , todoArrayCaptor.getValue().length);
+  }
 }

@@ -85,6 +85,16 @@ public class TodoDatabase {
       boolean targetStatus = queryParams.get("status").equals("complete");
       filteredTodos = filterTodosByStatus(targetStatus);
     }
+    // filter if limit is defined
+    if(queryParams.containsKey("limit")){
+      int limit = Math.min(allTodos.length , Integer.valueOf(queryParams.get("limit").get(0)));
+      Todo[] temp = new Todo[limit];
+      for (int i = 0; i < limit; i++) {
+        temp[i] = filteredTodos[i];
+      }
+      filteredTodos = temp;
+    }
+
     // Process other query parameters here... get todos
     return filteredTodos;
   }
