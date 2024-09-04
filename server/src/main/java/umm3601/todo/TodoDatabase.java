@@ -23,14 +23,14 @@ public class TodoDatabase {
 
   private Todo[] allTodos;
 
-  public TodoDatabase(String todosDataFile) throws IOException {
+  public TodoDatabase(String todoDataFile) throws IOException {
     // The `.getResourceAsStream` method searches for the given resource in
     // the classpath, and returns `null` if it isn't found. We want to throw
     // an IOException if the data file isn't found, so we need to check for
     // `null` ourselves, and throw an IOException if necessary.
-    InputStream resourceAsStream = getClass().getResourceAsStream(todosDataFile);
+    InputStream resourceAsStream = getClass().getResourceAsStream(todoDataFile);
     if (resourceAsStream == null) {
-      throw new IOException("Could not find " + todosDataFile);
+      throw new IOException("Could not find " + todoDataFile);
     }
     InputStreamReader reader = new InputStreamReader(resourceAsStream);
     // A Jackson JSON mapper knows how to parse JSON into sensible 'User'
@@ -56,6 +56,8 @@ public class TodoDatabase {
     return Arrays.stream(allTodos).filter(x -> x._id.equals(id)).findFirst().orElse(null);
   }
 
+
+
   /**
    * Get an array of all the users satisfying the queries in the params.
    *age
@@ -76,14 +78,20 @@ public class TodoDatabase {
       }
     }
     // Filter category if defined
-    // if (queryParams.containsKey("category")) {
-    //   String targetCategory = queryParams.get("category").get(0);
-    //   filteredTodos = filterTodosByCategory(filteredTodos, targetCategory);
-    // }
+    if (queryParams.containsKey("category")) {
+      String targetCategory = queryParams.get("category").get(0);
+      filteredTodos = filterTodosByCategory(targetCategory);
+    }
     //filter status if defined
+      
     if (queryParams.containsKey("status")) {
-      boolean targetStatus = Boolean.valueOf(queryParams.get("status").get(0));
-      filteredTodos = filterTodosByStatus(filteredTodos, targetStatus);
+      boolean targetStatus = queryParams.get("status").equals("complete");
+      // boolean targetStatus = Boolean.valueOf(queryParams.get("status").get(0)); //if what is abocve causes errors
+      filteredTodos = filterTodosByStatus(targetStatus);
+    }
+    if (queryParams.containsKey("contains")) {
+      String targetBody = queryParams.get("contains").get(0);
+        filteredTodos = filterTodosByBody(targetBody);
     }
     // Process other query parameters here... get todos
     return filteredTodos;
@@ -93,12 +101,12 @@ public class TodoDatabase {
    * Get an array of all the todos with the correct status.
    *
    * @param todos     the list of todos to filter by status
-   * @param targetAge the desired status
+   * @param targetStatus the desired status
    * @return an array of all the todos from the given list that have the target
    *         status
    */
-    public Todo[] filterTodosByStatus(Todo[] todos, boolean targetStatus) {
-      return Arrays.stream(todos).filter(x -> x.status == targetStatus).toArray(Todo[]::new);
+    public Todo[] filterTodosByStatus(Boolean targetStatus) {
+      return Arrays.stream(allTodos).filter(x -> x.status == targetStatus).toArray(Todo[]::new);
     }
 
   /**
@@ -118,4 +126,7 @@ public class TodoDatabase {
     return Arrays.stream(allTodos).filter(x -> x.owner.equals(targetOwner)).toArray(Todo[]::new);
   }
 
+  public Todo[] filterTodosByBody(String targetBody) {
+    return Arrays.stream(allTodos).filter(x -> x.body.contains(targetBody)).toArray(Todo[]::new);
+  }
 }
