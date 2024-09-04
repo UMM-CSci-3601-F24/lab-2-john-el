@@ -160,8 +160,7 @@ public class TodoControllerSpec {
     todoController.getTodos(ctx);
     verify(ctx).json(todoArrayCaptor.capture());
 
-    assertEquals(TodoDatabase.size(), todoArrayCaptor.getValue().length)
-    assertEquals(TodoDatabase.allTodos.length, todoArrayCaptor.getValue().length);
+    assertEquals(db.size(), todoArrayCaptor.getValue().length);
   }
 
 
