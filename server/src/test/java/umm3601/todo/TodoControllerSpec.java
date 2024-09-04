@@ -1,6 +1,6 @@
 package umm3601.todo;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+// import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -23,7 +23,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import io.javalin.Javalin;
-import io.javalin.http.BadRequestResponse;
+// import io.javalin.http.BadRequestResponse;
 import io.javalin.http.Context;
 import io.javalin.http.HttpStatus;
 import io.javalin.http.NotFoundResponse;
@@ -47,7 +47,7 @@ public class TodoControllerSpec {
   }
 
   @Test
-  public void canBuildController() throws IOException{
+  public void canBuildController() throws IOException {
     TodoController controller = TodoController.buildTodoController(Main.TODO_DATA_FILE);
     Javalin mockServer = Mockito.mock(Javalin.class);
     controller.addRoutes(mockServer);
@@ -55,7 +55,7 @@ public class TodoControllerSpec {
   }
 
   @Test
-  public void buildControllerFailsWithIllegalDbFile(){
+  public void buildControllerFailsWithIllegalDbFile() {
     Assertions.assertThrows(IOException.class, () -> {
       TodoController.buildTodoController("this is not a legal file name");
     });
