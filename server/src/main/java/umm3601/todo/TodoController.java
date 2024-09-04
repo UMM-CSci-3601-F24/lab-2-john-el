@@ -7,7 +7,6 @@ import io.javalin.http.Context;
 import io.javalin.http.HttpStatus;
 import io.javalin.http.NotFoundResponse;
 import umm3601.Controller;
-// import umm3601.todo.TodoDatabase;
 
 
 public class TodoController implements Controller {
@@ -37,10 +36,11 @@ public class TodoController implements Controller {
     }
   }
 
-public void getTodos(Context ctx) {
+  public void getTodos(Context ctx) {
     Todo[] todos = todoDatabase.listTodos(ctx.queryParamMap());
     ctx.json(todos);
   }
+
 
 // public void getTodosByBody(Context ctx)
 

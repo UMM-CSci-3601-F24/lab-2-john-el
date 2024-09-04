@@ -23,14 +23,14 @@ public class TodoDatabase {
 
   private Todo[] allTodos;
 
-  public TodoDatabase(String todosDataFile) throws IOException {
+  public TodoDatabase(String todoDataFile) throws IOException {
     // The `.getResourceAsStream` method searches for the given resource in
     // the classpath, and returns `null` if it isn't found. We want to throw
     // an IOException if the data file isn't found, so we need to check for
     // `null` ourselves, and throw an IOException if necessary.
-    InputStream resourceAsStream = getClass().getResourceAsStream(todosDataFile);
+    InputStream resourceAsStream = getClass().getResourceAsStream(todoDataFile);
     if (resourceAsStream == null) {
-      throw new IOException("Could not find " + todosDataFile);
+      throw new IOException("Could not find " + todoDataFile);
     }
     InputStreamReader reader = new InputStreamReader(resourceAsStream);
     // A Jackson JSON mapper knows how to parse JSON into sensible 'User'
@@ -47,7 +47,7 @@ public class TodoDatabase {
 
   /**
    * Get the single user specified by the given ID. Return `null` if there is no
-   * user with that ID.
+   * user with that ID.get
    *
    * @param id the ID of the desired user
    * @return the user with the given ID, or null if there is no user with that ID
@@ -55,6 +55,8 @@ public class TodoDatabase {
   public Todo getTodosByID(String id) {
     return Arrays.stream(allTodos).filter(x -> x._id.equals(id)).findFirst().orElse(null);
   }
+
+
 
   /**
    * Get an array of all the users satisfying the queries in the params.
@@ -84,6 +86,10 @@ public class TodoDatabase {
     if (queryParams.containsKey("status")) {
       boolean targetStatus = queryParams.get("status").get(0).equals("complete");
       filteredTodos = filterTodosByStatus(targetStatus);
+    }
+    if (queryParams.containsKey("contains")) {
+      String targetBody = queryParams.get("contains").get(0);
+        filteredTodos = filterTodosByBody(targetBody);
     }
     // Process other query parameters here... get todos
     return filteredTodos;
@@ -118,4 +124,7 @@ public class TodoDatabase {
     return Arrays.stream(allTodos).filter(x -> x.owner.equals(targetOwner)).toArray(Todo[]::new);
   }
 
+  public Todo[] filterTodosByBody(String targetBody) {
+    return Arrays.stream(allTodos).filter(x -> x.body.contains(targetBody)).toArray(Todo[]::new);
+  }
 }
