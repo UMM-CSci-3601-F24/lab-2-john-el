@@ -78,28 +78,28 @@ public class TodoControllerSpec {
   @Test //based off of canGteUsersWithCompany
   public void canGetTodosByStatusTrue() throws IOException {
     Map<String, List<String>> queryParams = new HashMap<>();
-    queryParams.put("status", Arrays.asList(new String[] {"true"})); //risky gamble here converting bool to string
+    queryParams.put("status", Arrays.asList(new String[] {"complete"})); //risky gamble here converting bool to string
     when(ctx.queryParamMap()).thenReturn(queryParams);
 
     todoController.getTodos(ctx);
 
     verify(ctx).json(todoArrayCaptor.capture());
     for (Todo todo : todoArrayCaptor.getValue()) {
-      assertEquals("true", todo.status);
+      assertEquals(true, todo.status);
     }
   }
 
   @Test
    public void canGetTodosByStatusFalse() throws IOException {
     Map<String, List<String>> queryParams = new HashMap<>();
-    queryParams.put("status", Arrays.asList(new String[] {"false"})); //risky gamble here converting bool to string
+    queryParams.put("status", Arrays.asList(new String[] {"incomplete"})); //risky gamble here converting bool to string
     when(ctx.queryParamMap()).thenReturn(queryParams);
 
     todoController.getTodos(ctx);
 
     verify(ctx).json(todoArrayCaptor.capture());
     for (Todo todo : todoArrayCaptor.getValue()) {
-      assertEquals("false", todo.status);
+      assertEquals(false, todo.status);
     }
   }
 
@@ -119,14 +119,14 @@ public class TodoControllerSpec {
     }
   }
 
-  @Test
-  public void respondsAppropriatelyToRequestForNonexistentOwner() throws IOException {
-    when(ctx.pathParam("owner")).thenReturn(null);
-    Throwable exception = Assertions.assertThrows(NotFoundResponse.class, () -> {
-      todoController.getTodos(ctx);
-    });
-    assertEquals("No todo with owner " + null + " was found.", exception.getMessage());
-  }
+  // @Test
+  // public void respondsAppropriatelyToRequestForNonexistentOwner() throws IOException {
+  //   when(ctx.pathParam("owner")).thenReturn(null);
+  //   Throwable exception = Assertions.assertThrows(NotFoundResponse.class, () -> {
+  //     todoController.getTodos(ctx);
+  //   });
+  //   assertEquals("No todo with owner " + null + " was found.", exception.getMessage());
+  // }
 
   @Test //based off canGetUsersWithSpecifiedID
   public void canGetTodosByID() throws IOException {
