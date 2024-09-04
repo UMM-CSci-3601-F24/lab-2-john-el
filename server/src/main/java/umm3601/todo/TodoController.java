@@ -41,17 +41,11 @@ public class TodoController implements Controller {
     ctx.json(todos);
   }
 
-  public void filterTodosByOwner(Context ctx) {
-    String owner = ctx.queryParamMap().get("owner").get(0);
-      Todo[] todos = todoDatabase.filterTodosByOwner(owner);
-      if (todos.length != 0) {
-        ctx.json(todos);
-        ctx.status(HttpStatus.OK);
-      } else {
-        throw new NotFoundResponse("No todo with owner " + owner + " was found.");
-      }
-  }
 
+// public void getTodosByBody(Context ctx)
+
+
+// NOT NEEDED CODE
 // public void getTodosByStatus(Context ctx) {
 //   Boolean status = null;
 //   if(ctx.pathParam("status").equals("incomplete")){
@@ -67,9 +61,21 @@ public class TodoController implements Controller {
 //     throw new NotFoundResponse("No todo with status " + status + "was found.");
 //   }
 // }
+
+// public void filterTodosByOwner(Context ctx) {
+//     String owner = ctx.pathParam("owner");
+//     Todo[] todos = todoDatabase.filterTodosByOwner(owner);
+//     if (todos != null) {
+//       ctx.json(todos);
+//       ctx.status(HttpStatus.OK);
+//     } else {
+//       throw new NotFoundResponse("No todo with owner " + owner + " was found.");
+//     }
+// }
+
 @Override
   public void addRoutes(Javalin server) {
-    server.get("api/todos/{id}", this::getTodosByID);
+    server.get("api/todos/{id}", this::getTodo);
     server.get("/api/todos", this::getTodos);
     //server.get("/api/todos?owner=Blanche", this::filterTodosByOwner);
     //server.get("/api/todos?status=complete", this::getTodosByStatus);
