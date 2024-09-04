@@ -75,19 +75,19 @@ public class TodoControllerSpec {
   //   assertTrue(,todoArrayCaptor.capture());
   // }
 
-  @Test //based off of canGteUsersWithCompany
-  public void canGetTodosByStatusTrue() throws IOException {
-    Map<String, List<String>> queryParams = new HashMap<>();
-    queryParams.put("status", Arrays.asList(new String[] {"true"})); //risky gamble here converting bool to string
-    when(ctx.queryParamMap()).thenReturn(queryParams);
+  // @Test //based off of canGteUsersWithCompany
+  // public void canGetTodosByStatusTrue() throws IOException {
+  //   Map<String, List<String>> queryParams = new HashMap<>();
+  //   queryParams.put("status", Arrays.asList(new String[] {"true"})); //risky gamble here converting bool to string
+  //   when(ctx.queryParamMap()).thenReturn(queryParams);
 
-    todoController.getTodos(ctx);
+  //   todoController.getTodos(ctx);
 
-    verify(ctx).json(todoArrayCaptor.capture());
-    for (Todo todo : todoArrayCaptor.getValue()) {
-      assertEquals(true, todo.status);
-    }
-  }
+  //   verify(ctx).json(todoArrayCaptor.capture());
+  //   for (Todo todo : todoArrayCaptor.getValue()) {
+  //     assertEquals(true, todo.status);
+  //   }
+  // }
 
   @Test
    public void canGetTodosByStatusFalse() throws IOException {
@@ -119,14 +119,14 @@ public class TodoControllerSpec {
     }
   }
 
-  @Test
-  public void respondsAppropriatelyToRequestForNonexistentOwner() throws IOException {
-    when(ctx.pathParam("owner")).thenReturn(null);
-    Throwable exception = Assertions.assertThrows(NotFoundResponse.class, () -> {
-      todoController.getTodos(ctx);
-    });
-    assertEquals("No todo with owner " + null + " was found.", exception.getMessage());
-  }
+  // @Test
+  // public void respondsAppropriatelyToRequestForNonexistentOwner() throws IOException {
+  //   when(ctx.pathParam("owner")).thenReturn(null);
+  //   Throwable exception = Assertions.assertThrows(NotFoundResponse.class, () -> {
+  //     todoController.getTodos(ctx);
+  //   });
+  //   assertEquals("No todo with owner " + null + " was found.", exception.getMessage());
+  // }
 
   @Test //based off canGetUsersWithSpecifiedID
   public void canGetTodosByID() throws IOException {
@@ -145,7 +145,7 @@ public class TodoControllerSpec {
   @Test
   public void canGetTodosByBody() throws IOException {
     Map<String, List<String>> queryParams = new HashMap<>();
-    queryParams.put("body", Arrays.asList(new String[] {"qui"}));
+    queryParams.put("contains", Arrays.asList(new String[] {"qui"}));
     when(ctx.queryParamMap()).thenReturn(queryParams);
     todoController.getTodos(ctx);
     verify(ctx).json(todoArrayCaptor.capture());

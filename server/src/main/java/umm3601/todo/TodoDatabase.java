@@ -87,8 +87,8 @@ public class TodoDatabase {
       boolean targetStatus = queryParams.get("status").equals("complete");
       filteredTodos = filterTodosByStatus(targetStatus);
     }
-    if (queryParams.containsKey("body")) {
-      String targetBody = queryParams.get("body").contains();
+    if (queryParams.containsKey("contains")) {
+      String targetBody = queryParams.get("contains").get(0);
         filteredTodos = filterTodosByBody(targetBody);
     }
     // Process other query parameters here... get todos

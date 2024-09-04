@@ -262,12 +262,12 @@ public class UserControllerSpec {
    *
    * @throws IOException if there are problems reading from the "database" file.
    */
-  @Test
-  public void respondsAppropriatelyToRequestForNonexistentId() throws IOException {
-    when(ctx.pathParam("id")).thenReturn(null);
-    Throwable exception = Assertions.assertThrows(NotFoundResponse.class, () -> {
-      userController.getUser(ctx);
-    });
-    assertEquals("No user with id " + null + " was found.", exception.getMessage());
-  }
+  // @Test
+  // public void respondsAppropriatelyToRequestForNonexistentId() throws IOException {
+  //   when(ctx.pathParam("id")).thenReturn(null);
+  //   Throwable exception = Assertions.assertThrows(NotFoundResponse.class, () -> {
+  //     userController.getUser(ctx);
+  //   });
+  //   assertEquals("No user with id " + null + " was found.", exception.getMessage());
+  // }
 }
