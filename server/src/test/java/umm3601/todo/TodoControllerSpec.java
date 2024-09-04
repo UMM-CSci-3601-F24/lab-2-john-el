@@ -79,7 +79,7 @@ public class TodoControllerSpec {
     String id = "58895985a22c04e761776d54";
     Todo todo = db.getTodosByID(id);
     when(ctx.pathParam("id")).thenReturn(id);
-    todoController.getTodosByID(ctx);
+    todoController.getTodo(ctx);
      assertEquals("Blanche", todo.toString());
   }
 
@@ -105,7 +105,7 @@ public class TodoControllerSpec {
 
     when(ctx.pathParam("id")).thenReturn(id);
 
-    todoController.getTodosByID(ctx);
+    todoController.getTodo(ctx);
     verify(ctx).json(todo);
     verify(ctx).status(HttpStatus.OK);
   }
@@ -114,7 +114,7 @@ public class TodoControllerSpec {
   public void respondsAppropriatelyToRequestForNonexistentId() throws IOException {
     when(ctx.pathParam("id")).thenReturn(null);
     Throwable exception = Assertions.assertThrows(NotFoundResponse.class, () -> {
-      todoController.getTodosByID(ctx);
+      todoController.getTodo(ctx);
     });
     assertEquals("No todo with id " + null + " was found.", exception.getMessage());
   }
