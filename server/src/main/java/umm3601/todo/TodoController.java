@@ -7,7 +7,6 @@ import io.javalin.http.Context;
 import io.javalin.http.HttpStatus;
 import io.javalin.http.NotFoundResponse;
 import umm3601.Controller;
-// import umm3601.todo.TodoDatabase;
 
 
 public class TodoController implements Controller {
@@ -37,14 +36,21 @@ public class TodoController implements Controller {
     }
   }
 
-public void getTodos(Context ctx) {
+  public void getTodos(Context ctx) {
     Todo[] todos = todoDatabase.listTodos(ctx.queryParamMap());
     ctx.json(todos);
   }
 
-
-
-
+  public void filterTodosByOwner(Context ctx) {
+    String owner = ctx.queryParamMap().get("owner").get(0);
+      Todo[] todos = todoDatabase.filterTodosByOwner(owner);
+      if (todos.length != 0) {
+        ctx.json(todos);
+        ctx.status(HttpStatus.OK);
+      } else {
+        throw new NotFoundResponse("No todo with owner " + owner + " was found.");
+      }
+  }
 
 // public void getTodosByStatus(Context ctx) {
 //   Boolean status = null;
@@ -61,18 +67,6 @@ public void getTodos(Context ctx) {
 //     throw new NotFoundResponse("No todo with status " + status + "was found.");
 //   }
 // }
-
-// public void filterTodosByOwner(Context ctx) {
-//     String owner = ctx.pathParam("owner");
-//     Todo[] todos = todoDatabase.filterTodosByOwner(owner);
-//     if (todos != null) {
-//       ctx.json(todos);
-//       ctx.status(HttpStatus.OK);
-//     } else {
-//       throw new NotFoundResponse("No todo with owner " + owner + " was found.");
-//     }
-// }
-
 @Override
   public void addRoutes(Javalin server) {
     server.get("api/todos/{id}", this::getTodosByID);
