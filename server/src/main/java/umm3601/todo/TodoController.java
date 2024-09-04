@@ -45,33 +45,33 @@ public void getTodos(Context ctx) {
 // public void getTodosByBody(Context ctx)
 
 
+// NOT NEEDED CODE
+// public void getTodosByStatus(Context ctx) {
+//   Boolean status = null;
+//   if(ctx.pathParam("status").equals("incomplete")){
+//     status = false;
+//   } else if (ctx.pathParam("status").equals("complete")){
+//       status = true;
+//   }
+//   Todo[] todos = todoDatabase.filterTodosByStatus(status);
+//   if (todos != null) {
+//     ctx.json(todos);
+//     ctx.status(HttpStatus.OK);
+//   } else {
+//     throw new NotFoundResponse("No todo with status " + status + "was found.");
+//   }
+// }
 
-public void getTodosByStatus(Context ctx) {
-  Boolean status = null;
-  if(ctx.pathParam("status").equals("incomplete")){
-    status = false;
-  } else if (ctx.pathParam("status").equals("complete")){
-      status = true;
-  }
-  Todo[] todos = todoDatabase.filterTodosByStatus(status);
-  if (todos != null) {
-    ctx.json(todos);
-    ctx.status(HttpStatus.OK);
-  } else {
-    throw new NotFoundResponse("No todo with status " + status + "was found.");
-  }
-}
-
-public void filterTodosByOwner(Context ctx) {
-	String owner = ctx.pathParam("owner");
-    Todo[] todos = todoDatabase.filterTodosByOwner(owner);
-    if (todos != null) {
-      ctx.json(todos);
-      ctx.status(HttpStatus.OK);
-    } else {
-      throw new NotFoundResponse("No todo with owner " + owner + " was found.");
-    }
-}
+// public void filterTodosByOwner(Context ctx) {
+// 	String owner = ctx.pathParam("owner");
+//     Todo[] todos = todoDatabase.filterTodosByOwner(owner);
+//     if (todos != null) {
+//       ctx.json(todos);
+//       ctx.status(HttpStatus.OK);
+//     } else {
+//       throw new NotFoundResponse("No todo with owner " + owner + " was found.");
+//     }
+// }
 
 @Override
   public void addRoutes(Javalin server) {
