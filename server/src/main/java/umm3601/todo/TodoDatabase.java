@@ -23,14 +23,14 @@ public class TodoDatabase {
 
   private Todo[] allTodos;
 
-  public TodoDatabase(String todosDataFile) throws IOException {
+  public TodoDatabase(String todoDataFile) throws IOException {
     // The `.getResourceAsStream` method searches for the given resource in
     // the classpath, and returns `null` if it isn't found. We want to throw
     // an IOException if the data file isn't found, so we need to check for
     // `null` ourselves, and throw an IOException if necessary.
-    InputStream resourceAsStream = getClass().getResourceAsStream(todosDataFile);
+    InputStream resourceAsStream = getClass().getResourceAsStream(todoDataFile);
     if (resourceAsStream == null) {
-      throw new IOException("Could not find " + todosDataFile);
+      throw new IOException("Could not find " + todoDataFile);
     }
     InputStreamReader reader = new InputStreamReader(resourceAsStream);
     // A Jackson JSON mapper knows how to parse JSON into sensible 'User'
@@ -88,7 +88,7 @@ public class TodoDatabase {
       filteredTodos = filterTodosByStatus(targetStatus);
     }
     if (queryParams.containsKey("body")) {
-      String targetBody = queryParams.get("body").get(0);
+      String targetBody = queryParams.get("body").contains();
         filteredTodos = filterTodosByBody(targetBody);
     }
     // Process other query parameters here... get todos

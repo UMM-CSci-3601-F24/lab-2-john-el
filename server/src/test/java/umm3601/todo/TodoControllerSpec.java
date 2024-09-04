@@ -28,7 +28,6 @@ import io.javalin.http.Context;
 import io.javalin.http.HttpStatus;
 import io.javalin.http.NotFoundResponse;
 import umm3601.Main;
-import umm3601.user.UserDatabase;
 
 @SuppressWarnings({"MagicNumber"})
 public class TodoControllerSpec {
