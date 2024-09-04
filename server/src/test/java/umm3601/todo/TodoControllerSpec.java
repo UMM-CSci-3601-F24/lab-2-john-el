@@ -74,12 +74,7 @@ public class TodoControllerSpec {
     assertEquals(db.size(), todoArrayCaptor.getValue().length);
   }
 
-  // @Test
-  // public void canGetTodosReturnsArray() throws IOException {
-  //   todoController.getTodos(ctx);
-  //   verify(ctx).json(todoArrayCaptor.capture());
-  //   assertTrue(,todoArrayCaptor.capture());
-  // }
+
 
   @Test //based off of canGteUsersWithCompany
   public void canGetTodosByStatusTrue() throws IOException {
@@ -93,6 +88,7 @@ public class TodoControllerSpec {
     for (Todo todo : todoArrayCaptor.getValue()) {
       assertEquals(true, todo.status);
     }
+  }
   @Test
   public void canGetTodo() throws IOException {
     String id = "58895985a22c04e761776d54";
@@ -163,10 +159,11 @@ public class TodoControllerSpec {
     when(ctx.queryParamMap()).thenReturn(queryParams);
 
     Throwable exception = Assertions.assertThrows(NotFoundResponse.class, () -> {
-      todoController.filterTodosByOwner(ctx);
+      todoController.getTodos(ctx);
     });
     assertEquals("No todo with owner " + "Bubba" + " was found.", exception.getMessage());
   }
+
   @Test
   public void canGetTodosByBody() throws IOException {
     Map<String, List<String>> queryParams = new HashMap<>();
