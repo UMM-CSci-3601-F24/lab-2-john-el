@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -97,6 +98,26 @@ public class TodoDatabase {
       String targetBody = queryParams.get("contains").get(0);
         filteredTodos = filterTodosByBody(targetBody);
     }
+    if (queryParams.containsKey("orderBy")) {
+      String orderByParam = queryParams.get("orderBy").get(0);
+
+      if (orderByParam.equals("status")) {
+        filteredTodos = orderByStatus();
+      }
+
+      if (orderByParam.equals("owner")) {
+        filteredTodos = orderByOwner();
+      }
+
+      if (orderByParam.equals("category")) {
+        filteredTodos = orderByCategory();
+      }
+
+      if (orderByParam.equals("body")) {
+        filteredTodos = orderByBody();
+      }
+
+    }
     // Process other query parameters here... get todos
     return filteredTodos;
   }
@@ -142,4 +163,31 @@ public class TodoDatabase {
   public Todo[] filterTodosByBody(String targetBody) {
     return Arrays.stream(allTodos).filter(x -> x.body.contains(targetBody)).toArray(Todo[]::new);
   }
+
+//Oder By 'Status' + ???????
+public Todo[] orderByStatus() {
+  List<Todo> todos = Arrays.asList(allTodos);
+  todos.sort(Comparator.comparing(t -> t.status));
+  return todos.toArray(new Todo[] {});
+}
+
+public Todo[] orderByOwner() {
+  List<Todo> todos = Arrays.asList(allTodos);
+  todos.sort(Comparator.comparing(t -> t.owner));
+  return todos.toArray(new Todo[] {});
+}
+
+public Todo[] orderByCategory() {
+  List<Todo> todos = Arrays.asList(allTodos);
+  todos.sort(Comparator.comparing(t -> t.category));
+  return todos.toArray(new Todo[] {});
+}
+
+public Todo[] orderByBody() {
+  List<Todo> todos = Arrays.asList(allTodos);
+  todos.sort(Comparator.comparing(t -> t.body));
+  return todos.toArray(new Todo[] {});
+}
+
+
 }
