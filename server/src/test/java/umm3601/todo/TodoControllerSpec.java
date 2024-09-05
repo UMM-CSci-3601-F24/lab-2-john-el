@@ -1,6 +1,6 @@
 package umm3601.todo;
 
-// import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+//import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -27,13 +27,13 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import io.javalin.Javalin;
-// import io.javalin.http.BadRequestResponse;
+//import io.javalin.http.BadRequestResponse;
 import io.javalin.http.Context;
 import io.javalin.http.HttpStatus;
 import io.javalin.http.NotFoundResponse;
 //import io.javalin.http.NotFoundResponse;
 import umm3601.Main;
-// import umm3601.user.UserDatabase;
+//import umm3601.todo.TodoDatabase;
 
 @SuppressWarnings({"MagicNumber"})
 public class TodoControllerSpec {
@@ -81,9 +81,7 @@ public class TodoControllerSpec {
     Map<String, List<String>> queryParams = new HashMap<>();
     queryParams.put("status", Arrays.asList(new String[] {"complete"})); //risky gamble here converting bool to string
     when(ctx.queryParamMap()).thenReturn(queryParams);
-
     todoController.getTodos(ctx);
-
     verify(ctx).json(todoArrayCaptor.capture());
     for (Todo todo : todoArrayCaptor.getValue()) {
       assertEquals(true, todo.status);
@@ -123,7 +121,6 @@ public class TodoControllerSpec {
     verify(ctx).json(todo);
     verify(ctx).status(HttpStatus.OK);
   }
-
   @Test
   public void respondsAppropriatelyToRequestForNonexistentId() throws IOException {
     when(ctx.pathParam("id")).thenReturn(null);
@@ -131,6 +128,52 @@ public class TodoControllerSpec {
       todoController.getTodo(ctx);
     });
     assertEquals("No todo with id " + null + " was found.", exception.getMessage());
+  }
+
+  //LIMIT TESTS
+  @Test
+  public void respondsAppropriatelyToRequestForBadLimit() throws IOException {
+    Map<String, List<String>> queryParams = new HashMap<>();
+    queryParams.put("limit", Arrays.asList(new String[] {"!@"}));
+    when(ctx.queryParamMap()).thenReturn(queryParams);
+
+    Throwable exception = Assertions.assertThrows(NumberFormatException.class, () -> {
+      todoController.getTodos(ctx);
+    });
+    assertEquals("For input string: \"!@\"", exception.getMessage());
+  }
+  @Test
+  public void canGetTodosWithLimitAbove() throws IOException {
+    Map<String, List<String>> queryParams = new HashMap<>();
+    queryParams.put("limit", Arrays.asList(new String[] {"100000"}));
+    when(ctx.queryParamMap()).thenReturn(queryParams);
+
+    todoController.getTodos(ctx);
+    verify(ctx).json(todoArrayCaptor.capture());
+
+    assertEquals(db.size(), todoArrayCaptor.getValue().length);
+  }
+  @Test
+  public void canGetTodosWithLimitWithin() throws IOException {
+    Map<String, List<String>> queryParams = new HashMap<>();
+    queryParams.put("limit", Arrays.asList(new String[] {"5"}));
+    when(ctx.queryParamMap()).thenReturn(queryParams);
+
+    todoController.getTodos(ctx);
+    verify(ctx).json(todoArrayCaptor.capture());
+
+    assertEquals(5, todoArrayCaptor.getValue().length);
+  }
+  @Test
+  public void canGetTodosWithLimitZero() throws IOException {
+    Map<String, List<String>> queryParams = new HashMap<>();
+    queryParams.put("limit", Arrays.asList(new String[] {"0"}));
+    when(ctx.queryParamMap()).thenReturn(queryParams);
+
+    todoController.getTodos(ctx);
+    verify(ctx).json(todoArrayCaptor.capture());
+
+    assertEquals(0, todoArrayCaptor.getValue().length);
   }
 
 
