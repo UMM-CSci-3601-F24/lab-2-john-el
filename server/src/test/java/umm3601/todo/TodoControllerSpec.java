@@ -2,11 +2,16 @@ package umm3601.todo;
 
 //import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
+// import java.util.Arrays;
+// import java.util.HashMap;
+// import java.util.List;
+// import java.util.Map;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -26,6 +31,7 @@ import io.javalin.Javalin;
 import io.javalin.http.Context;
 import io.javalin.http.HttpStatus;
 import io.javalin.http.NotFoundResponse;
+//import io.javalin.http.NotFoundResponse;
 import umm3601.Main;
 //import umm3601.todo.TodoDatabase;
 
@@ -68,79 +74,50 @@ public class TodoControllerSpec {
     assertEquals(db.size(), todoArrayCaptor.getValue().length);
   }
 
-  // @Test
-  // public void canGetTodosReturnsArray() throws IOException {
-  //   todoController.getTodos(ctx);
-  //   verify(ctx).json(todoArrayCaptor.capture());
-  //   assertTrue(,todoArrayCaptor.capture());
-  // }
 
-  // @Test //based off of canGetUsersWithCompany
-  // public void canGetTodosByStatusTrue() throws IOException {
-  //   Map<String, List<String>> queryParams = new HashMap<>();
-  //   queryParams.put("status", Arrays.asList(new String[] {"true"})); //risky gamble here converting bool to string
-  //   when(ctx.queryParamMap()).thenReturn(queryParams);
 
-  //   todoController.getTodosByStatus(ctx);
-
-  //   verify(ctx).json(todoArrayCaptor.capture());
-  //   for (Todo todo : todoArrayCaptor.getValue()) {
-  //     assertEquals("true", todo.status);
-  //   }
-  // }
-
-  // @Test
-  //  public void canGetTodosByStatusFalse() throws IOException {
-  //   Map<String, List<String>> queryParams = new HashMap<>();
-  //   queryParams.put("status", Arrays.asList(new String[] {"false"})); //risky gamble here converting bool to string
-  //   when(ctx.queryParamMap()).thenReturn(queryParams);
-
-  //   todoController.getTodosByStatus(ctx);
-
-  //   verify(ctx).json(todoArrayCaptor.capture());
-  //   for (Todo todo : todoArrayCaptor.getValue()) {
-  //     assertEquals("false", todo.status);
-  //   }
-  // }
-
-  // OWNER TESTS
-  @Test
-  public void canFilterTodosByOwner() throws IOException {
+  @Test //based off of canGteUsersWithCompany
+  public void canGetTodosByStatusTrue() throws IOException {
     Map<String, List<String>> queryParams = new HashMap<>();
-    queryParams.put("owner", Arrays.asList(new String[] {"Blanche"}));
+    queryParams.put("status", Arrays.asList(new String[] {"complete"})); //risky gamble here converting bool to string
     when(ctx.queryParamMap()).thenReturn(queryParams);
-
     todoController.getTodos(ctx);
-
     verify(ctx).json(todoArrayCaptor.capture());
     for (Todo todo : todoArrayCaptor.getValue()) {
-      assertEquals("Blanche", todo.owner);
+      assertEquals(true, todo.status);
+    }
+  }
+  @Test
+  public void canGetTodo() throws IOException {
+    String id = "58895985a22c04e761776d54";
+    Todo todo = db.getTodosByID(id);
+    when(ctx.pathParam("id")).thenReturn(id);
+    todoController.getTodo(ctx);
+     assertEquals("Blanche", todo.toString());
+  }
+
+  @Test
+   public void canGetTodosByStatusFalse() throws IOException {
+    Map<String, List<String>> queryParams = new HashMap<>();
+    queryParams.put("status", Arrays.asList(new String[] {"incomplete"})); //risky gamble here converting bool to string
+    when(ctx.queryParamMap()).thenReturn(queryParams);
+    todoController.getTodos(ctx);
+    verify(ctx).json(todoArrayCaptor.capture());
+    for (Todo todo : todoArrayCaptor.getValue()) {
+      assertEquals(false, todo.status);
     }
   }
 
-  // @Test
-  // public void respondsAppropriatelyToRequestForNonexistentOwner() throws IOException {
-  //   Map<String, List<String>> queryParams = new HashMap<>();
-  //   queryParams.put("owner", Arrays.asList(new String[] {"Bubba"}));
-  //   when(ctx.queryParamMap()).thenReturn(queryParams);
-
-  //   Throwable exception = Assertions.assertThrows(NotFoundResponse.class, () -> {
-  //     todoController.getTodos(ctx);
-  //   });
-  //   assertEquals("No todo with owner " + "Bubba" + " was found.", exception.getMessage());
-  // }
-
-  //ID TESTS
   @Test //based off canGetUsersWithSpecifiedID
   public void canGetTodosByID() throws IOException {
     // A specific user ID known to be in the "database".
-    String id = "58895985c1849992336c219b";
+    String id = "5889598555fbbad472586a56";
     // Get the user associated with that ID.
     Todo todo = db.getTodosByID(id);
 
     when(ctx.pathParam("id")).thenReturn(id);
 
-    todoController.getTodosByID(ctx);
+    todoController.getTodo(ctx);
     verify(ctx).json(todo);
     verify(ctx).status(HttpStatus.OK);
   }
@@ -148,7 +125,7 @@ public class TodoControllerSpec {
   public void respondsAppropriatelyToRequestForNonexistentId() throws IOException {
     when(ctx.pathParam("id")).thenReturn(null);
     Throwable exception = Assertions.assertThrows(NotFoundResponse.class, () -> {
-      todoController.getTodosByID(ctx);
+      todoController.getTodo(ctx);
     });
     assertEquals("No todo with id " + null + " was found.", exception.getMessage());
   }
@@ -197,5 +174,45 @@ public class TodoControllerSpec {
     verify(ctx).json(todoArrayCaptor.capture());
 
     assertEquals(0, todoArrayCaptor.getValue().length);
+  }
+
+
+  //TESTS FOR OWNER
+  @Test
+  public void canFilterTodosByOwner() throws IOException {
+    Map<String, List<String>> queryParams = new HashMap<>();
+    queryParams.put("owner", Arrays.asList(new String[] {"Blanche"}));
+    when(ctx.queryParamMap()).thenReturn(queryParams);
+
+    todoController.getTodos(ctx);
+
+    verify(ctx).json(todoArrayCaptor.capture());
+    for (Todo todo : todoArrayCaptor.getValue()) {
+      assertEquals("Blanche", todo.owner);
+    }
+  }
+
+  // @Test
+  // public void respondsAppropriatelyToRequestForNonexistentOwner() throws IOException {
+  //   Map<String, List<String>> queryParams = new HashMap<>();
+  //   queryParams.put("owner", Arrays.asList(new String[] {"Bubba"}));
+  //   when(ctx.queryParamMap()).thenReturn(queryParams);
+
+  //   Throwable exception = Assertions.assertThrows(NotFoundResponse.class, () -> {
+  //     todoController.getTodos(ctx);
+  //   });
+  //   assertEquals("No todo with owner " + "Bubba" + " was found.", exception.getMessage());
+  // }
+
+  @Test
+  public void canGetTodosByBody() throws IOException {
+    Map<String, List<String>> queryParams = new HashMap<>();
+    queryParams.put("contains", Arrays.asList(new String[] {"qui"}));
+    when(ctx.queryParamMap()).thenReturn(queryParams);
+    todoController.getTodos(ctx);
+    verify(ctx).json(todoArrayCaptor.capture());
+    for (Todo todo : todoArrayCaptor.getValue()) {
+      assertTrue(todo.body.contains("qui"), "Body <" + todo.body + "> didn't contain 'qui'.");
+    }
   }
 }
