@@ -215,4 +215,20 @@ public class TodoControllerSpec {
       assertTrue(todo.body.contains("qui"), "Body <" + todo.body + "> didn't contain 'qui'.");
     }
   }
+
+  // ??????????
+  // @Test
+  // public void canOrderTodosByStatus() throws IOException {
+  //   Map<String, List<String>> queryParams = new HashMap<>();
+  //   queryParams.put("orderBy", Arrays.asList(new String[] {"Status"}));
+  //   when(ctx.queryParamMap()).thenReturn(queryParams);
+
+  //   todoController.getTodos(ctx);
+
+  //   verify(ctx).json(todoArrayCaptor.capture());
+  //   for (Todo todo : todoArrayCaptor.getValue()) {
+  //     assertEquals("Blanche", todos[0].owner);
+  //   }
+  // }
+
 }

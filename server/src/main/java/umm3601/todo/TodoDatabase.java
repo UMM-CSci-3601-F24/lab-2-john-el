@@ -98,27 +98,27 @@ public class TodoDatabase {
       String targetBody = queryParams.get("contains").get(0);
         filteredTodos = filterTodosByBody(targetBody);
     }
-    if (queryParams.containsKey("orderBy")) {
-      String orderByParam = queryParams.get("orderBy").get(0);
+    //filter if looking by attributes in orderBy Alphabetically
+    if (queryParams.containsKey("orderBy")) { //if query parameters contains key orderBy block executes.
+      String orderByParam = queryParams.get("orderBy").get(0); //retrieves the first element from list of strings associated with orderBy.
 
-      if (orderByParam.equals("status")) {
-        filteredTodos = orderByStatus();
+      if (orderByParam.equals("status")) { //if parameter is a status then
+        filteredTodos = orderByStatus(); //filtered todos will call method orderByStatus().
       }
 
-      if (orderByParam.equals("owner")) {
-        filteredTodos = orderByOwner();
+      if (orderByParam.equals("owner")) { //if parameter is a owner then
+        filteredTodos = orderByOwner(); //filtered todos will call method orderByOwner().
       }
 
-      if (orderByParam.equals("category")) {
-        filteredTodos = orderByCategory();
+      if (orderByParam.equals("category")) { //if parameter is a category then
+        filteredTodos = orderByCategory(); //filtered todos will call method orderByCategory().
       }
 
-      if (orderByParam.equals("body")) {
-        filteredTodos = orderByBody();
+      if (orderByParam.equals("body")) { //if parameter is a body then
+        filteredTodos = orderByBody(); //filtered todos will call method orderByBody().
       }
 
     }
-    // Process other query parameters here... get todos
     return filteredTodos;
   }
 
@@ -164,29 +164,29 @@ public class TodoDatabase {
     return Arrays.stream(allTodos).filter(x -> x.body.contains(targetBody)).toArray(Todo[]::new);
   }
 
-//Oder By 'Status' + ???????
+//Order by Status/Owner/Category/Body Alphabetically
 public Todo[] orderByStatus() {
-  List<Todo> todos = Arrays.asList(allTodos);
-  todos.sort(Comparator.comparing(t -> t.status));
-  return todos.toArray(new Todo[] {});
+  List<Todo> todos = Arrays.asList(allTodos); //convert array to list
+  todos.sort(Comparator.comparing(t -> t.status)); //sort by 'status' attribute
+  return todos.toArray(new Todo[] {}); //convert list back to array and return
 }
 
 public Todo[] orderByOwner() {
-  List<Todo> todos = Arrays.asList(allTodos);
-  todos.sort(Comparator.comparing(t -> t.owner));
-  return todos.toArray(new Todo[] {});
+  List<Todo> todos = Arrays.asList(allTodos); //convert array to list
+  todos.sort(Comparator.comparing(t -> t.owner)); //sort by 'owner' attribute
+  return todos.toArray(new Todo[] {}); //convert list back to array and return
 }
 
 public Todo[] orderByCategory() {
-  List<Todo> todos = Arrays.asList(allTodos);
-  todos.sort(Comparator.comparing(t -> t.category));
-  return todos.toArray(new Todo[] {});
+  List<Todo> todos = Arrays.asList(allTodos); //convert array to list
+  todos.sort(Comparator.comparing(t -> t.category)); //sort by 'category' attribute
+  return todos.toArray(new Todo[] {}); //convert list back to array and return
 }
 
 public Todo[] orderByBody() {
-  List<Todo> todos = Arrays.asList(allTodos);
-  todos.sort(Comparator.comparing(t -> t.body));
-  return todos.toArray(new Todo[] {});
+  List<Todo> todos = Arrays.asList(allTodos); //convert array to list
+  todos.sort(Comparator.comparing(t -> t.body)); //sort by 'body' attribute
+  return todos.toArray(new Todo[] {}); //convert list back to array and return
 }
 
 
