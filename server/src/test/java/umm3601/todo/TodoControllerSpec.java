@@ -103,8 +103,7 @@ public class TodoControllerSpec {
   //   }
   // }
 
-  // can get todo by owner
-  // based off of canGetUsersWithCompany
+  // OWNER TESTS
   @Test
   public void canFilterTodosByOwner() throws IOException {
     Map<String, List<String>> queryParams = new HashMap<>();
@@ -164,10 +163,8 @@ public class TodoControllerSpec {
     Throwable exception = Assertions.assertThrows(NumberFormatException.class, () -> {
       todoController.getTodos(ctx);
     });
-   // System.out.println(exception.getMessage());
     assertEquals("For input string: \"!@\"", exception.getMessage());
   }
-
   @Test
   public void canGetTodosWithLimitAbove() throws IOException {
     Map<String, List<String>> queryParams = new HashMap<>();
@@ -179,8 +176,6 @@ public class TodoControllerSpec {
 
     assertEquals(db.size(), todoArrayCaptor.getValue().length);
   }
-
-
   @Test
   public void canGetTodosWithLimitWithin() throws IOException {
     Map<String, List<String>> queryParams = new HashMap<>();
@@ -192,8 +187,6 @@ public class TodoControllerSpec {
 
     assertEquals(5, todoArrayCaptor.getValue().length);
   }
-
-
   @Test
   public void canGetTodosWithLimitZero() throws IOException {
     Map<String, List<String>> queryParams = new HashMap<>();
