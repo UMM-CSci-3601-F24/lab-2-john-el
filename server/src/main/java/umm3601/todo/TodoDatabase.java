@@ -138,7 +138,7 @@ public class TodoDatabase {
       }
     return temp;
   }
-  
+
   public Todo[] filterTodosByBody(String targetBody) {
     return Arrays.stream(allTodos).filter(x -> x.body.contains(targetBody)).toArray(Todo[]::new);
   }

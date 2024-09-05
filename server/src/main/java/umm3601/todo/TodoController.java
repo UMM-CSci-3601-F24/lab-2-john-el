@@ -43,7 +43,7 @@ public class TodoController implements Controller {
   }
 @Override
   public void addRoutes(Javalin server) {
-    server.get("api/todos/{id}", this::getTodosByID);
+    server.get("api/todos/{id}", this::getTodo);
     server.get("/api/todos", this::getTodos);
   }
 }
