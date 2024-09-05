@@ -27,7 +27,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import io.javalin.Javalin;
-import io.javalin.http.BadRequestResponse;
+//import io.javalin.http.BadRequestResponse;
 //import io.javalin.http.BadRequestResponse;
 import io.javalin.http.Context;
 import io.javalin.http.HttpStatus;
@@ -122,10 +122,12 @@ public class TodoControllerSpec {
   @Test
   public void respondsAppropriatelyToRequestForNonexistentId() throws IOException {
     when(ctx.pathParam("id")).thenReturn(null); //gives di witch is null
-    Throwable exception = Assertions.assertThrows(NotFoundResponse.class, () -> { //pulls error message to use in assertEquals
+    //pulls error message to use in assertEquals
+    Throwable exception = Assertions.assertThrows(NotFoundResponse.class, () -> {
       todoController.getTodo(ctx);
     });
-    assertEquals("No todo with id " + null + " was found.", exception.getMessage()); //makes sure error was thrown
+    //makes sure error was thrown
+    assertEquals("No todo with id " + null + " was found.", exception.getMessage());
   }
 
   //LIMIT TESTS
@@ -144,13 +146,14 @@ public class TodoControllerSpec {
   public void canGetTodosWithLimitAbove() throws IOException {
     //  will return length of db if limit is larger
     Map<String, List<String>> queryParams = new HashMap<>();
-    queryParams.put("limit", Arrays.asList(new String[] {"100000"})); //assumes db is < 100,000, would be need to changed if have a large database
+    //assumes db is < 100,000, would be need to changed if have a large database
+    queryParams.put("limit", Arrays.asList(new String[] {"100000"}));
     when(ctx.queryParamMap()).thenReturn(queryParams);
 
     todoController.getTodos(ctx);
     verify(ctx).json(todoArrayCaptor.capture());
-
-    assertEquals(db.size(), todoArrayCaptor.getValue().length); //checks that the length is the smaller of the limit or db.length()
+    //checks that the length is the smaller of the limit or db.length()
+    assertEquals(db.size(), todoArrayCaptor.getValue().length);
   }
   @Test
   public void canGetTodosWithLimitWithin() throws IOException {
@@ -206,11 +209,14 @@ public class TodoControllerSpec {
   public void canGetTodosByBody() throws IOException {
     Map<String, List<String>> queryParams = new HashMap<>();
     queryParams.put("contains", Arrays.asList(new String[] {"qui"}));
-    when(ctx.queryParamMap()).thenReturn(queryParams); //creates query params and passes them
+    //creates query params and passes them
+    when(ctx.queryParamMap()).thenReturn(queryParams);
     todoController.getTodos(ctx);
-    verify(ctx).json(todoArrayCaptor.capture()); //returns todos and captures them
+    //returns todos and captures them
+    verify(ctx).json(todoArrayCaptor.capture());
     for (Todo todo : todoArrayCaptor.getValue()) {
-      assertTrue(todo.body.contains("qui"), "Body <" + todo.body + "> didn't contain 'qui'."); //will contain or will return error
+      //will contain or will return error
+      assertTrue(todo.body.contains("qui"), "Body <" + todo.body + "> didn't contain 'qui'.");
     }
   }
   @Test
@@ -220,6 +226,7 @@ public class TodoControllerSpec {
     when(ctx.queryParamMap()).thenReturn(queryParams); //creates query params and passes them
     todoController.getTodos(ctx);
     verify(ctx).json(todoArrayCaptor.capture()); //returns todos and captures them
-    assertEquals(todoArrayCaptor.getValue().length, 0); //when enter string that we know is not in the body the resulting todoCapture will be empty
+    //when enter string that we know is not in the body the resulting todoCapture will be empty
+    assertEquals(todoArrayCaptor.getValue().length, 0);
   }
 }
