@@ -100,7 +100,8 @@ public class TodoDatabase {
     }
     //filter if looking by attributes in orderBy Alphabetically
     if (queryParams.containsKey("orderBy")) { //if query parameters contains key orderBy block executes.
-      String orderByParam = queryParams.get("orderBy").get(0); //retrieves the first element from list of strings associated with orderBy.
+      String orderByParam = queryParams.get("orderBy").get(0);
+    //line above retrieves the first element from list of strings associated with orderBy.
 
       if (orderByParam.equals("status")) { //if parameter is a status then
         filteredTodos = orderByStatus(); //filtered todos will call method orderByStatus().
