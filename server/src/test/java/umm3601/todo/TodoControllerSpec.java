@@ -1,7 +1,9 @@
 package umm3601.todo;
 
 //import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+//import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+//import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
@@ -228,5 +230,20 @@ public class TodoControllerSpec {
     verify(ctx).json(todoArrayCaptor.capture()); //returns todos and captures them
     //when enter string that we know is not in the body the resulting todoCapture will be empty
     assertEquals(todoArrayCaptor.getValue().length, 0);
+  }
+
+  // CATEGORY TEST
+  @Test
+  public void canFilterTodosByCategory() throws IOException {
+    Map<String, List<String>> queryParams = new HashMap<>();
+    queryParams.put("category", Arrays.asList(new String[] {"homework"}));
+    when(ctx.queryParamMap()).thenReturn(queryParams);
+
+    todoController.getTodos(ctx);
+
+    verify(ctx).json(todoArrayCaptor.capture());
+    for (Todo todo : todoArrayCaptor.getValue()) {
+      assertEquals("homework", todo.category);
+    }
   }
 }
