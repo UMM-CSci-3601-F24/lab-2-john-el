@@ -1,19 +1,18 @@
-package umm3601.todos;
-
+package umm3601.todo;
 
 @SuppressWarnings({"VisibilityModifier"})
-public class Todos {
+public class Todo {
   @SuppressWarnings({"MemberName"})
   public String _id;
-  public String name;
-  public int age;
-  public String company;
-  public String email;
+  public String owner;
+  public Boolean status;
+  public String body;
+  public String category;
   @Override
-  public String toString() {
-    return name;
-}
 
+  public String toString() {
+    return owner;
+  }
 }
 
   // By default Java field names shouldn't start with underscores.

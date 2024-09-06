@@ -233,9 +233,9 @@ At the very least (necessary to get 85% of this part of the lab)
 you should implement (and create meaningful server-side tests for) the following features:
 
 - List all the todos
-  - [ ] Implement an `api/todos` server-side endpoint, which returns all the to-dos
+  - [x] Implement an `api/todos` server-side endpoint, which returns all the to-dos
 - List a single todo by ID
-  - [ ] Implement an `api/todos/58895985c1849992336c219b` server-side endpoint, which
+  - [x] Implement an `api/todos/58895985c1849992336c219b` server-side endpoint, which
         returns the single todo with the given `_id`. It should return a 404
         (use the Javalin `NotFoundResponse` class) if there is no todo with the
         specified `_id`.
