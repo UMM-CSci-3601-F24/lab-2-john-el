@@ -194,18 +194,6 @@ public class TodoControllerSpec {
     }
   }
 
-  // @Test
-  // public void respondsAppropriatelyToRequestForNonexistentOwner() throws IOException {
-  //   Map<String, List<String>> queryParams = new HashMap<>();
-  //   queryParams.put("owner", Arrays.asList(new String[] {"Bubba"}));
-  //   when(ctx.queryParamMap()).thenReturn(queryParams);
-
-  //   Throwable exception = Assertions.assertThrows(NotFoundResponse.class, () -> {
-  //     todoController.getTodos(ctx);
-  //   });
-  //   assertEquals("No todo with owner " + "Bubba" + " was found.", exception.getMessage());
-  // }
-
   @Test
   public void canGetTodosByBody() throws IOException {
     Map<String, List<String>> queryParams = new HashMap<>();
@@ -218,19 +206,18 @@ public class TodoControllerSpec {
     }
   }
 
-  // ??????????
-  // @Test
-  // public void canOrderTodosByStatus() throws IOException {
-  //   Map<String, List<String>> queryParams = new HashMap<>();
-  //   queryParams.put("orderBy", Arrays.asList(new String[] {"Status"}));
-  //   when(ctx.queryParamMap()).thenReturn(queryParams);
+  // CATEGORY TEST
+  @Test
+  public void canFilterTodosByCategory() throws IOException {
+    Map<String, List<String>> queryParams = new HashMap<>();
+    queryParams.put("category", Arrays.asList(new String[] {"homework"}));
+    when(ctx.queryParamMap()).thenReturn(queryParams);
 
-  //   todoController.getTodos(ctx);
+    todoController.getTodos(ctx);
 
-  //   verify(ctx).json(todoArrayCaptor.capture());
-  //   for (Todo todo : todoArrayCaptor.getValue()) {
-  //     assertEquals("Blanche", todos[0].owner);
-  //   }
-  // }
-
+    verify(ctx).json(todoArrayCaptor.capture());
+    for (Todo todo : todoArrayCaptor.getValue()) {
+      assertEquals("homework", todo.category);
+    }
+  }
 }
