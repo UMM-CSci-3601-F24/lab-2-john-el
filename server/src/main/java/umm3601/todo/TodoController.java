@@ -17,6 +17,7 @@ public class TodoController implements Controller {
     this.todoDatabase = todoDatabase;
   }
 
+  //builds todoController with given todoDataFile
   public static TodoController buildTodoController(String todoDataFile) throws IOException {
     TodoController todoController = null;
 
@@ -26,6 +27,7 @@ public class TodoController implements Controller {
     return todoController;
   }
 
+  //Gets single todo with a given ID
   public void getTodo(Context ctx) {
     String id = ctx.pathParam("id");
     Todo todos = todoDatabase.getTodosByID(id);
@@ -37,11 +39,13 @@ public class TodoController implements Controller {
     }
   }
 
+  //gets todos that fit with given path parameters
   public void getTodos(Context ctx) {
     Todo[] todos = todoDatabase.listTodos(ctx.queryParamMap());
     ctx.json(todos);
   }
-@Override
+
+  @Override
   public void addRoutes(Javalin server) {
     server.get("api/todos/{id}", this::getTodo);
     server.get("/api/todos", this::getTodos);
